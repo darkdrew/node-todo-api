@@ -33,6 +33,15 @@ app.post('/todos', (req,res) => {
     // 400 code means Bad Request
     res.status(400).send(error);
   });
+});
+
+// GET route
+app.get('/todos', (req,res) => {
+  Todo.find().then( (todos) => {
+    res.send({todos});
+  }, (error) => {
+    res.status(400).send(error);
+  })
 })
 
 const port = process.env.PORT || 3000;
