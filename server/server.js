@@ -68,6 +68,22 @@ app.get('/todos/:id', (req,res) => {
   // error 400 - send back empty body
 })
 
+// DELETE
+app.delete('/todos/:id', (req,res) => {
+  const id = req.params.id;
+    if(!ObjectID.isValid(id)) {
+      return req.status(404).send();
+    }
+    Todo.findByIdAndRemove(id).then( (todo) => {
+      if(!todo) {
+        return res.status(404).send();
+      }
+      res.send(todo);
+    }).catch( (e) => {
+      res.status(400).send();
+    })
+})
+
 const port = process.env.PORT || 3000;
 app.listen(port,() => console.log('Listening on port', port) )
 
