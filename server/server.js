@@ -1,6 +1,7 @@
 // NPM Imports
 const express = require('express');
 const bodyParser = require('body-parser');
+const {ObjectID} = require('mongodb');
 
 // Local Imports
 // Grabbing the file for connection
@@ -42,6 +43,29 @@ app.get('/todos', (req,res) => {
   }, (error) => {
     res.status(400).send(error);
   })
+})
+
+// GET /todos/:id
+app.get('/todos/:id', (req,res) => {
+  const id = req.params.id;
+  // Validate ID using isValid
+  if(!ObjectID.isValid(id)){
+    console.log('its invalid ID');
+    //  res 404 - send back empty body
+    return res.status(404).send();
+  }
+  // findById
+  Todo.findById(id).then( (todo) => {
+    if(!todo){
+      return res.status(404).send();
+    }
+    res.send({todo:todo});
+  }).catch((e) => {
+    res.status(400).send();
+  })
+  // success if todo - send back
+  // if no todo - 404 - send empty body back
+  // error 400 - send back empty body
 })
 
 const port = process.env.PORT || 3000;
